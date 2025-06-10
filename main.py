@@ -12,3 +12,7 @@ if __name__ == "__main__":
     print("\n=== React Agent ===")
     react_result = run_react(question)
     print(react_result)
+
+    print("\m=== Toolformer Agent ===")
+    toolformer_result = run_toolformer(question)
+    print(toolformer_result)
