@@ -8,7 +8,7 @@ react_template = PromptTemplate(
     template="""
 You are an AI that can reason and use tools if needed.
 
-Question: {question"}
+Question: {question}
 
 Reasoning + Action:
 

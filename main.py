@@ -7,3 +7,7 @@ if __name__ == "__main__":
     print("\n=== Chain-of-Thought ==")
     cot_result = run_cot(question)
     print(cot_result)
+
+    print("\n=== React Agent ===")
+    react_result = run_react(question)
+    print(react_result)
