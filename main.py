@@ -6,7 +6,6 @@ from langgraph_flow import run_langgraph_flow
 
 if __name__ == "__main__":
     question = input("Enter your question: ")
-    role = input("Enter role for Camel Agent (default: Scientist): ") or"Scientist"
 
     print("\n=== Chain-of-Thought ==")
     cot_result = run_cot(question)
@@ -23,6 +22,6 @@ if __name__ == "__main__":
     print("\n=== Camel Agent (Scientist role) ===")
     camel_result = run_camel("Scientist", question)
     print(camel_result)
-    
+
     print("\n=== Full Langgraph Reasoning Bot Flow ===")
-    run_langgraph_flow(question, role)
+    run_langgraph_flow(question)
