@@ -6,11 +6,13 @@ from tools.calculator import calculate
 llm = Ollama(model="llama3")
 
 toolformer_template = PromptTemplate(
-    input_variables=["question"],
+    input_variables=["question", "context"],
     template="""
-You are an AI that can automatically decide when to use tools,
+You are an AI that can automatically decide when to use tools and answer question from the context of PDF provided.
 
 Question: {question}
+
+Context: {context}
 
 If the question can be answered directly, provide the answer.
 If the question requires a tool (calculator, PDF reader, API), suggest the  tool to use and then use the tool result.
@@ -23,13 +25,13 @@ Final Answer:
 """
 )
 
-def run_toolformer(question):
+def run_toolformer(question, context):
     tool_result = "N/A"
 
     if any(op in question for op in ["+", "-", "*", "/", "times", "divided by"]):
         expression = question.replace("times", "*").replace("divided by", "/")
         tool_result = str(calculate(expression))
 
-    prompt = toolformer_template.format(question=question, tool_result=tool_result)
+    prompt = toolformer_template.format(question=question, tool_result=tool_result, context=context)
     response = llm.invoke(prompt)
     return response

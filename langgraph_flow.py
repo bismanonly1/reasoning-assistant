@@ -1,6 +1,6 @@
 from langgraph.graph import StateGraph, END
 from typing import TypedDict
-from langchain_core.messages import HumanMessage, AIMessage
+from tools.pdf_reader import read_pdf
 
 from cot_agent import run_cot
 from react_agent import run_react
@@ -14,30 +14,36 @@ class MyState(TypedDict):
     react_result: str
     toolformer_result: str
     camel_result: str
+    pdf_text: str
+
 
 def cot_step(state: MyState):
     question = state["question"]
-    cot_result = run_cot(question)
-    state["cot_result"] = cot_result
+    context = state.get("pdf_text", "")
+    cot_result = run_cot(question, context)
+    state["cot_result"] = cot_result, state["pdf_text"]
     return state
     
 def react_step(state: MyState):
     question = state["question"]
-    react_result = run_react(question)
-    state["react_result"] = react_result
+    context = state.get("pdf_text", "")
+    react_result = run_react(question, context)
+    state["react_result"] = react_result, state["pdf_text"]
     return state
 
 def toolformer_step(state: MyState):
     question = state["question"]
-    toolformer_result = run_toolformer(question)
-    state["toolformer_result"] = toolformer_result
+    context = state.get("pdf_text", "")
+    toolformer_result = run_toolformer(question, context)
+    state["toolformer_result"] = toolformer_result, state["pdf_text"]
     return state
 
 def camel_step(state: MyState):
     question = state["question"]
+    context = state.get("pdf_text", "")
     role = state.get("role", "Scientist")
-    camel_result = run_camel(role, question)
-    state["camel_result"] = camel_result
+    camel_result = run_camel(role, question, context)
+    state["camel_result"] = camel_result, state["pdf_text"]
     return state
 
 graph = StateGraph(state_schema=MyState)
@@ -56,10 +62,12 @@ graph.add_edge("Camel Agent", END)
 
 app = graph.compile()
 
-def run_langgraph_flow(question, role="Scientist"):
+def run_langgraph_flow(question, role="Scientist", pdf_path=None):
+    pdf_text = read_pdf(pdf_path) if pdf_path else ""
     state = {
         "question": question,
-        "role": role
+        "role": role,
+        "pdf_text": pdf_text,
     }
 
     for state in app.stream(state):
