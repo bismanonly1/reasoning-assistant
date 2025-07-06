@@ -21,6 +21,8 @@ Final Answer:
 )
 
 def run_react(question, context):
-    prompt = react_template.format(question=question, context=context)    
+    if not context:
+        return "Sorry, no context provided to answer the question."
+    prompt = react_template.format(question=question, context=context)
     response = llm.invoke(prompt)
     return response

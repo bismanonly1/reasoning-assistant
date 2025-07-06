@@ -19,31 +19,31 @@ class MyState(TypedDict):
 
 def cot_step(state: MyState):
     question = state["question"]
-    context = state.get("pdf_text", "")
-    cot_result = run_cot(question, context)
-    state["cot_result"] = cot_result, state["pdf_text"]
+    pdf_text = state.get("pdf_text", "")
+    cot_result = run_cot(question, pdf_text)
+    state["cot_result"] = cot_result
     return state
     
 def react_step(state: MyState):
     question = state["question"]
-    context = state.get("pdf_text", "")
-    react_result = run_react(question, context)
-    state["react_result"] = react_result, state["pdf_text"]
+    pdf_text = state.get("pdf_text", "")
+    react_result = run_react(question, pdf_text)
+    state["react_result"] = react_result
     return state
 
 def toolformer_step(state: MyState):
     question = state["question"]
     context = state.get("pdf_text", "")
     toolformer_result = run_toolformer(question, context)
-    state["toolformer_result"] = toolformer_result, state["pdf_text"]
+    state["toolformer_result"] = toolformer_result
     return state
 
 def camel_step(state: MyState):
     question = state["question"]
-    context = state.get("pdf_text", "")
+    pdf_text = state.get("pdf_text", "")
     role = state.get("role", "Scientist")
-    camel_result = run_camel(role, question, context)
-    state["camel_result"] = camel_result, state["pdf_text"]
+    camel_result = run_camel(role, question, pdf_text)
+    state["camel_result"] = camel_result
     return state
 
 graph = StateGraph(state_schema=MyState)
