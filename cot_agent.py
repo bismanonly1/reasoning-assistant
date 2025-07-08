@@ -1,7 +1,7 @@
 from langchain_core.prompts import PromptTemplate
-from langchain_community.llms import Ollama
+from langchain_ollama import OllamaLLM
 
-llm = Ollama(model="llama3")
+llm = OllamaLLM(model="llama3")
 
 cot_template = PromptTemplate(
     input_variables=["question", "context"],
